@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Платформа СОР</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --border: #cbd5e1;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
+
+        h1, h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* Стили для экрана СОР */
+        .sor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .timer {
+            background: #fee2e2;
+            color: var(--danger);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
+        .question-card {
+            margin-bottom: 25px;
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .question-card p {
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .options label {
+            display: flex;
+            align-items: center;
+            font-weight: normal;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+
+        .options input {
+            margin-right: 10px;
+            accent-color: var(--primary);
+            width: 18px;
+            height: 18px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 90px;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            resize: vertical;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        textarea:focus {
+            border-color: var(--primary);
+        }
+
+        /* Результаты */
+        .result-box {
+            text-align: center;
+        }
+
+        .score {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 15px 0;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- ЭКРАН 1: РЕГИСТРАЦИЯ И ВЫБОР ПРЕДМЕТА -->
+        <div id="auth-screen">
+            <h1>Платформа СОР</h1>
+            <form id="auth-form" onsubmit="startSOR(event)">
+                <div class="form-group">
+                    <label for="fullname">ФИО Ученика:</label>
+                    <input type="text" id="fullname" placeholder="Введите фамилию и имя" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="grade">Класс:</label>
+                    <select id="grade" required>
+                        <option value="" disabled selected>Выберите класс</option>
+                        <option value="5">5 класс</option>
+                        <option value="6">6 класс</option>
+                        <option value="7">7 класс</option>
+                        <option value="8">8 класс</option>
+                        <option value="9">9 класс</option>
+                        <option value="10">10 класс</option>
+                        <option value="11">11 класс</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="subject">Предмет:</label>
+                    <select id="subject" required>
+                        <option value="" disabled selected>Выберите предмет</option>
+                        <option value="Математика">Математика</option>
+                        <option value="Информатика">Информатика</option>
+                        <option value="Физика">Физика</option>
+                        <option value="История Казахстана">История Казахстана</option>
+                        <option value="Английский язык">Английский язык</option>
+                    </select>
+                </div>
+
+                <button type="submit">Начать СОР</button>
+            </form>
+        </div>
+
+        <!-- ЭКРАН 2: ВЫПОЛНЕНИЕ СОР -->
+        <div id="sor-screen" class="hidden">
+            <div class="sor-header">
+                <div>
+                    <h3 id="sor-title">СОР по предмету</h3>
+                    <small id="student-info" style="color: #64748b;"></small>
+                </div>
+                <div class="timer" id="timer">20:00</div>
+            </div>
+
+            <form id="sor-form" onsubmit="submitSOR(event)">
+                <div id="questions-container">
+                    <!-- Вопросы будут добавляться динамически через JS -->
+                </div>
+                <button type="submit">Завершить и сдать СОР</button>
+            </form>
+        </div>
+
+        <!-- ЭКРАН 3: РЕЗУЛЬТАТЫ -->
+        <div id="result-screen" class="hidden">
+            <div class="result-box">
+                <h2>СОР успешно завершен!</h2>
+                <p id="result-student-details" style="font-size: 1.1rem; color: #475569;"></p>
+                <div class="score" id="score-display">0 / 0</div>
+                <p id="result-message" style="margin-bottom: 25px;"></p>
+                <button onclick="location.reload()">На главную</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // База демонстрационных вопросов для СОР
+        const mockQuestions = [
+            {
+                id: 1,
+                type: "radio",
+                text: "1. Чему равен результат выражения 5 + 3 * 2?",
+                options: ["16", "11", "13", "10"],
+                correct: "11"
+            },
+            {
+                id: 2,
+                type: "radio",
+                text: "2. Какая структура данных работает по принципу FIFO (первым вошел — первым вышел)?",
+                options: ["Стек (Stack)", "Очередь (Queue)", "Дерево (Tree)", "Граф (Graph)"],
+                correct: "Очередь (Queue)"
+            },
+            {
+                id: 3,
+                type: "textarea",
+                text: "3. Опишите своими словами основную цель создания данного СОР (развернутый ответ):",
+                correct: "" // Текстовые вопросы обычно проверяются учителем вручную, здесь оценим по наличию текста
+            }
+        ];
+
+        let studentData = {};
+        let timerInterval;
+        let timeLeft = 20 * 60; // 20 минут в секундах
+
+        function startSOR(event) {
+            event.preventDefault();
+            
+            // Сохраняем данные ученика
+            studentData.fullname = document.getElementById('fullname').value;
+            studentData.grade = document.getElementById('grade').value;
+            studentData.subject = document.getElementById('subject').value;
+
+            // Переключаем экраны
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('sor-screen').classList.remove('hidden');
+
+            // Заполняем шапку СОР
+            document.getElementById('sor-title').innerText = `СОР по предмету: ${studentData.subject}`;
+            document.getElementById('student-info').innerText = `Ученик: ${studentData.fullname} | ${studentData.grade} класс`;
+
+            // Рендерим вопросы
+            renderQuestions();
+
+            // Запускаем таймер
+            startTimer();
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+
+            mockQuestions.forEach((q, index) => {
+                let qDiv = document.createElement('div');
+                qDiv.className = 'question-card';
+
+                let html = `<p>${q.text}</p>`;
+
+                if (q.type === 'radio') {
+                    html += `<div class="options">`;
+                    q.options.forEach(opt => {
+                        html += `
+                            <label>
+                                <input type="radio" name="q_${q.id}" value="${opt}" required>
+                                ${opt}
+                            </label>
+                        `;
+                    });
+                    html += `</div>`;
+                } else if (q.type === 'textarea') {
+                    html += `<textarea name="q_${q.id}" placeholder="Введите ваш развернутый ответ здесь..." required></textarea>`;
+                }
+
+                qDiv.innerHTML = html;
+                container.appendChild(qDiv);
+            });
+        }
+
+        function startTimer() {
+            const timerDisplay = document.getElementById('timer');
+            
+            timerInterval = setInterval(() => {
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+
+                timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Время вышло! СОР будет автоматически отправлен.");
+                    document.getElementById('sor-form').requestSubmit();
+                }
+                timeLeft--;
+            }, 1000);
+        }
+
+        function submitSOR(event) {
+            event.preventDefault();
+            clearInterval(timerInterval);
+
+            // Сбор ответов и проверка
+            let score = 0;
+            let autoCheckableCount = 0;
+
+            mockQuestions.forEach(q => {
+                if (q.type === 'radio') {
+                    autoCheckableCount++;
+                    const selectedOpt = document.querySelector(`input[name="q_${q.id}"]:checked`);
+                    if (selectedOpt && selectedOpt.value === q.correct) {
+                        score++;
+                    }
+                } else if (q.type === 'textarea') {
+                    // Текстовый вопрос оценивается в 1 балл, если ученик что-то написал
+                    autoCheckableCount++;
+                    const textVal = document.querySelector(`textarea[name="q_${q.id}"]`).value.trim();
+                    if (textVal.length > 5) {
+                        score++; // Условный балл за заполненный развернутый ответ
+                    }
+                }
+            });
+
+            // Переключаем на экран результатов
+            document.getElementById('sor-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+
+            document.getElementById('result-student-details').innerText = `${studentData.fullname}, ${studentData.grade} класс (${studentData.subject})`;
+            document.getElementById('score-display').innerText = `${score} / ${autoCheckableCount}`;
+            
+            if (score === autoCheckableCount) {
+                document.getElementById('result-message').innerText = "Отличный результат! Вы справились со всеми заданиями.";
+            } else {
+                document.getElementById('result-message').innerText = "Работа сдана успешно. Ваши ответы отправлены преподавателю.";
+            }
+        }
+    </script>
+</body>
+</html>
